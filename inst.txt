@@ -46,4 +46,11 @@ passwore : SuperCoder
 
 --------------------------------------------------------------------------------------------
 
-
+#Working with REST Serializers:
+===============================
+1 - under tickets app -> create : serializers.py
+(works as a medium between views & models - a translator to json)
+2 - in it -> 
+    from rest_framework import serializers
+    from tickets.models import *
+    
