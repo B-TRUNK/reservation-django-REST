@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse
 from .models import *
+from rest_framework.decorators import api_view
+from .serializers import *
+from rest_framework import status, filters
+from rest_framework.response import Response
 
 
 # references for views serialization
@@ -32,3 +36,21 @@ def no_rest_from_model(request):
         'guests' : list(data.values('guest_name', 'mobile'))
     }
     return JsonResponse(response)
+
+# 3.1 (GET, POST)
+
+@api_view(['GET', 'POST'])
+def FBV_LIST(request):
+
+    #GET
+    if request.method == 'GET':
+        guests = Guest.objects.all()
+        serializer = GuestSerlializer(guests, many=True)
+        return Response(serializer.data)
+    #POST
+    elif request.method == 'POST':
+        serializer = GuestSerlializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
