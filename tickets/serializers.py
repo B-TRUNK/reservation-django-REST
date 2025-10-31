@@ -17,7 +17,7 @@ class ReservationSerlializer(serializers.ModelSerializer):
 class GuestSerlializer(serializers.ModelSerializer):
     class Meta:
         model = Guest
-        fields = ['reservation', 'guest_name', 'mobile']
+        fields = ['id', 'reservation', 'guest', 'mobile']
 
 
 #uuid  slog
