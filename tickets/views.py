@@ -7,6 +7,12 @@ from rest_framework import status, filters, generics, mixins, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import Http404
+from rest_framework.authentication import BaseAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+#Customized Permissions
+from .permissions import IsAuthorOrReadOnly
+
+
 
 
 # references for views serialization
@@ -168,14 +174,19 @@ class mixins_pk(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Destr
 
 # 6 - 1 Generics GET, PUST
 class Generics_List(generics.ListCreateAPIView):
-    queryset = Guest.objects.all()
-    serializer_class = GuestSerlializer
+    queryset                = Guest.objects.all()
+    serializer_class        = GuestSerlializer
+    authentication_classes  = [TokenAuthentication]
+    permission_classes      = [IsAuthenticated]
+
 
 
 # 6 - 2 Generics GET, PUST
 class Generics_pk(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Guest.objects.all()
-    serializer_class = GuestSerlializer
+    queryset                = Guest.objects.all()
+    serializer_class        = GuestSerlializer
+    authentication_classes  = [TokenAuthentication]
+    permission_classes      = [IsAuthenticated]
 
 
 # 7 - 1 Viewsets GET, PUST
@@ -226,6 +237,13 @@ def new_reservation(request):
     reservation.save()
 
     return Response(status=status.HTTP_201_CREATED)
+
+
+# 12 -  Post Author Editor
+class Post_pk(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthorOrReadOnly]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
 
 
